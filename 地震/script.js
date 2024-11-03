@@ -208,6 +208,19 @@ function QuakeSelect(num) {
     }
     map.addLayer(shindo_layer);
     map.flyTo(shingenLatLng, 8.5, { duration: 0.5 })
+
+    document.getElementById('int').innerText = maxIntText;
+    let element = document.getElementById("max_int");
+    // maxIntTextの値に応じて背景色を変更
+    if (maxIntText === "1") {
+        element.style.backgroundColor = "#00a1ff";
+    } else if (maxIntText === "2") {
+        element.style.backgroundColor = "#60d937";
+    } else if (maxIntText === "3") {
+        element.style.backgroundColor = "#fdfb42";
+    } else if (maxIntText === "4") {
+        element.style.backgroundColor = "#fe9400";
+    }
 }
 
 
