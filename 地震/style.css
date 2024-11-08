@@ -59,14 +59,13 @@ html, body, #map {
     border: none;
 }
 #reload_num, #autoreload_num {
-    background: #fff;
-    border: 0;
+    background-color: transparent;
+    border: none;
     width: 2rem;
-    font-family: "ヒラギノ角ゴ-Pro",'Noto Sans JP';
+    font-family: "ヒラギノ角ゴ-Pro",'Noto Sans JP',sans-serif;
     font-weight: 500;
     font-size: 0.9rem;
-    color: #00000088;
-    border-bottom: #000000 1px solid;
+    color: black;
 }
 select, input, button {
     outline: none;
