@@ -214,12 +214,41 @@ function QuakeSelect(num) {
     // maxIntTextの値に応じて背景色を変更
     if (maxIntText === "1") {
         element.style.backgroundColor = "#00a1ff";
+        element.style.color = "black";
     } else if (maxIntText === "2") {
         element.style.backgroundColor = "#60d937";
+        element.style.color = "black";
     } else if (maxIntText === "3") {
         element.style.backgroundColor = "#fdfb42";
+        element.style.color = "black";
     } else if (maxIntText === "4") {
         element.style.backgroundColor = "#fe9400";
+        element.style.color = "black";
+    } else if (maxIntText === "5弱") {
+        element.style.backgroundColor = "#b51800";
+        element.style.color = "white";
+    } else if (maxIntText === "5強") {
+        element.style.backgroundColor = "#b51800";
+        element.style.color = "white";
+    } else if (maxIntText === "6弱") {
+        element.style.backgroundColor = "#f9d3e0";
+        element.style.color = "#b51800";
+    } else if (maxIntText === "6強") {
+        element.style.backgroundColor = "#f9d3e0";
+        element.style.color = "#b51800";
+    } else if (maxIntText === "7") {
+        element.style.backgroundColor = "#b51800";
+        element.style.color = "white";
+    } else {
+        element.style.backgroundColor = "#9f9f9f";
+        element.style.color = "black";
+    }
+
+    let int_element = document.getElementById("int")
+    if (maxIntText === "不明") {
+        int_element.style.fontSize = "0.7em";
+    } else {
+        int_element.style.fontSize = "6vw";
     }
 }
 
