@@ -250,6 +250,11 @@ function QuakeSelect(num) {
     } else {
         int_element.style.fontSize = "6vw";
     }
+
+    document.getElementById("time").innerText = Time
+    document.getElementById("place").innerText = Name
+    document.getElementById("magnitude").innerText = Magnitude
+    document.getElementById("depth").innerText = Depth
 }
 
 
