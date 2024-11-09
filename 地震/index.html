@@ -18,14 +18,22 @@
     <div id="map"></div>
     <div id="informations">
         <div id="max_int">
-            <p id="saidai">最大震度</p><p id="int"></p>
+            <p id="saidai">最大震度</p>
+            <p id="int"></p>
+        </div>
+        <div id="detail_informatins">
+            <p id="time">N/A</p>
+            <p id="place">N/A</p>
+            <p>規模：M<span id="magnitude"></span></p>
+            <p>深さ：<span id="depth"></span></p>
         </div>
     </div>
     <div class="btns">
         <select id="quakelist">
             <option>地震情報の取得中…</option>
         </select>
-        <span class="setsumei" style="padding: 0;padding-right: 5px;"><button id="reload">情報更新</button> <input type="number" id="reload_num" value="50" max="100">件</span>
+        <span class="setsumei" style="padding: 0;padding-right: 5px;"><button id="reload">情報更新</button> <input
+                type="number" id="reload_num" value="50" max="100">件</span>
     </div>
     <script src="JMAPoints.js"></script>
     <script src="script.js"></script>
