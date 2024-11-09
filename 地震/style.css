@@ -14,16 +14,16 @@ html, body, #map {
     top: 5vh;
     left: 5vh;
     z-index: 10000;
-    width: 14vw;
+    width: 16vw;
     box-shadow: 0.3vw 0.3vw 0.6vw black;
 }
 #max_int {
     line-height: 50%;
     background-color: #9f9f9f;
     text-align: center;
-    font-size: 6vw;
+    font-size: 7vw;
     font-weight: 900;
-    height: 7vw;
+    height: 8vw;
 }
 #saidai {
     font-size: 0.3em;
@@ -33,6 +33,12 @@ html, body, #map {
 #int {
     margin: 0;
     transform: scale(1.1, 1);
+}
+#detail_informatins p {
+    margin: 0;
+    padding: 3% 1vw 0 1vw;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
 }
 .btns {
     position: absolute;
