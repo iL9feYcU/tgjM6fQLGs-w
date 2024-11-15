@@ -36,9 +36,10 @@ html, body, #map {
 }
 #detail_informatins p {
     margin: 0;
-    padding: 3% 1vw 0 1vw;
+    padding: 2% 1vw 0 1vw;
     background-color: rgba(0, 0, 0, 0.5);
     color: white;
+    font-size: 1.6vw;
 }
 .btns {
     position: absolute;
