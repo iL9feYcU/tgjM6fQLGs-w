@@ -251,9 +251,21 @@ function QuakeSelect(num) {
         int_element.style.fontSize = "6vw";
     }
 
-    document.getElementById("time").innerText = Time
+    let maxIntElement =document.getElementById("max_int");
+    if (maxIntText === "7") {
+        maxIntElement.style.border = "8px solid #fdfb42";
+    } else {
+        maxIntElement.style.border = "none";
+    }
+
+    const intElement = document.getElementById('int');
+    const intText = intElement.textContent;
+    const modifiedText = intText.replace(/(弱|強)/g, '<span style="font-size: 0.7em;">$1</span>');
+    intElement.innerHTML = modifiedText;
+
+    document.getElementById("time").innerText = Time.slice(0, -3) + "頃"
     document.getElementById("place").innerText = Name
-    document.getElementById("magnitude").innerText = Magnitude
+    document.getElementById("magnitude").innerText = "M" + Magnitude
     document.getElementById("depth").innerText = Depth
 }
 
