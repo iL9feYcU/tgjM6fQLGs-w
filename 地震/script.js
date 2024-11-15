@@ -263,10 +263,10 @@ function QuakeSelect(num) {
     const modifiedText = intText.replace(/(弱|強)/g, '<span style="font-size: 0.7em;">$1</span>');
     intElement.innerHTML = modifiedText;
 
-    document.getElementById("time").innerText = Time.slice(0, -3) + "頃"
-    document.getElementById("place").innerText = Name
-    document.getElementById("magnitude").innerText = "M" + Magnitude
-    document.getElementById("depth").innerText = Depth
+    document.getElementById("time").innerText = Time.slice(0, -3) + "頃";
+    document.getElementById("place").innerText = Name;
+    document.getElementById("magnitude").innerText = "M" + Magnitude;
+    document.getElementById("depth").innerText = Depth;
 }
 
 
