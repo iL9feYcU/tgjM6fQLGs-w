@@ -31,7 +31,7 @@ var PolygonLayer_Style_nerv = {
     "fillOpacity": 1
 }
 
-$.getJSON("prefectures.geojson", function (data) {
+$.getJSON("combined.geojson", function (data) {
     L.geoJson(data, {
         pane: "pane_map3",
         style: PolygonLayer_Style_nerv
@@ -83,6 +83,7 @@ function GetQuake(option) {
             var text;
             let maxInt_data = element['earthquake']['maxScale'];
             let maxIntText = hantei_maxIntText(maxInt_data);
+            var magnitude = element['earthquake']['hypocenter']['magnitude']
             let Name = hantei_Name(element['earthquake']['hypocenter']['name']);
             let Time = element['earthquake']['time'];
             if (element["issue"]["type"] == "ScalePrompt") {
@@ -90,7 +91,7 @@ function GetQuake(option) {
             } else if (element["issue"]["type"] == "Foreign") {
                 text = "【遠地地震】" + Time.slice(0, -3) + " " + Name;
             } else {
-                text = Time.slice(0, -3) + " " + Name + " " + "\n" + "\n最大震度 : " + maxIntText;
+                text = Time.slice(0, -3) + " " + Name + " " + "\n" + "\n最大震度 : " + maxIntText + "\nM" + magnitude;
             }
             option.value = "" + forEachNum + "";
             option.textContent = text;
@@ -206,8 +207,18 @@ function QuakeSelect(num) {
             }
         });
     }
+
+    if (QuakeJson[num]["issue"]["type"] == "ScalePrompt") {
+        magnification = 8.5;
+    } else if (QuakeJson[num]["issue"]["type"] == "Foreign") {
+        magnification = 5;
+    } else {
+        magnification = 8.5;
+    }
+
+
     map.addLayer(shindo_layer);
-    map.flyTo(shingenLatLng, 8.5, { duration: 0.5 })
+    map.flyTo(shingenLatLng, magnification, { duration: 0.5 })
 
     document.getElementById('int').innerText = maxIntText;
     let element = document.getElementById("max_int");
@@ -263,10 +274,18 @@ function QuakeSelect(num) {
     const modifiedText = intText.replace(/(弱|強)/g, '<span style="font-size: 0.7em;">$1</span>');
     intElement.innerHTML = modifiedText;
 
+    let TsunamiElement = document.getElementById("tsunamiwarning");
+    if (QuakeJson[num]['earthquake']['domesticTsunami'] === "warning") {
+        TsunamiElement.style.display = "block";
+    } else {
+        TsunamiElement.style.display = "none";
+    }
+
     document.getElementById("time").innerText = Time.slice(0, -3) + "頃";
     document.getElementById("place").innerText = Name;
     document.getElementById("magnitude").innerText = "M" + Magnitude;
     document.getElementById("depth").innerText = Depth;
+    document.getElementById("tsunami").innerText = tsunamiText;
 }
 
 
@@ -290,11 +309,11 @@ function hantei_Depth(param) {
 }
 function hantei_tsunamiText(param) {
     let kaerichi = param == "None" ? "津波の心配なし" :
-        param == "Unknown" ? "不明" :
-            param == "Checking" ? "調査中" :
+        param == "Unknown" ? "津波不明" :
+            param == "Checking" ? "津波調査中" :
                 param == "NonEffective" ? "津波被害の心配なし" :
                     param == "Watch" ? "津波注意報" :
-                        param == "Warning" ? "津波警報" : "情報なし";
+                        param == "Warning" ? "" : "情報なし";
     return kaerichi;
 }
 
