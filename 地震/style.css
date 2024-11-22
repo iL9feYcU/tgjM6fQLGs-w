@@ -41,6 +41,20 @@ html, body, #map {
     color: white;
     font-size: 1.5vw;
 }
+#tsunamiwarning {
+    display: none;
+    position: absolute;
+    text-align: center;
+    line-height: 100%;
+    padding: 1vw;
+    bottom: 2vh;
+    right: 2vh;
+    z-index: 10000;
+    color: white;
+    font-size: 4vw;
+    font-weight: bold;
+    background-color: rgba(0, 0, 0, 0.5);
+}
 .btns {
     position: absolute;
     bottom: 10px;
