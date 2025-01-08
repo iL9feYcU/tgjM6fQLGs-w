@@ -230,7 +230,7 @@ function QuakeSelect(num) {
         element.style.backgroundColor = "#60d937";
         element.style.color = "black";
     } else if (maxIntText === "3") {
-        element.style.backgroundColor = "#fdfb42";
+        element.style.backgroundColor = "#fff200";
         element.style.color = "black";
     } else if (maxIntText === "4") {
         element.style.backgroundColor = "#fe9400";
