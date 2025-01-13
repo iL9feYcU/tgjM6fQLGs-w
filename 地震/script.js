@@ -313,7 +313,7 @@ function hantei_tsunamiText(param) {
             param == "Checking" ? "津波調査中" :
                 param == "NonEffective" ? "津波被害の心配なし" :
                     param == "Watch" ? "津波注意報" :
-                        param == "Warning" ? "" : "情報なし";
+                        param == "Warning" ? "津波予報あり" : "情報なし";
     return kaerichi;
 }
 
