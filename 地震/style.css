@@ -41,6 +41,7 @@ html, body, #map {
 #saidai {
     font-size: 0.3em;
     margin: 0;
+    padding-top: 0.1vw;
     transform: scale(1.4, 1);
 }
 #int {
