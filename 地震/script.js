@@ -204,8 +204,84 @@ function QuakeSelect(num) {
                     });
                     shindo_layer.addLayer(shindo_icon);
                 }
-            }
+            } 
         });
+    } else {//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        QuakeJson[num]["points"].forEach(element => {
+            var result = AreaName.indexOf(element["addr"]);
+            if (result != -1) {
+                var ImgUrl = "";
+                var PointShindo = "";
+                var icon_theme = "";
+                if (element["scale"] == 10) {
+                    ImgUrl = "detail_int/" + icon_theme + "_int1.png";
+                    PointShindo = "震度1";
+                } else if (element["scale"] == 20) {
+                    ImgUrl = "detail_int/" + icon_theme + "_int2.png";
+                    PointShindo = "震度2";
+                } else if (element["scale"] == 30) {
+                    ImgUrl = "int/" + icon_theme + "int3.png";
+                    PointShindo = "震度3";
+                } else if (element["scale"] == 40) {
+                    ImgUrl = "detail_int/" + icon_theme + "_int4.png";
+                    PointShindo = "震度4";
+                } else if (element["scale"] == 45) {
+                    ImgUrl = "detail_int/" + icon_theme + "_int50.png";
+                    PointShindo = "震度5弱";
+                } else if (element["scale"] == 46) {
+                    ImgUrl = "detail_int/" + icon_theme + "_int54.png";
+                    PointShindo = "震度5弱以上と推定";
+                } else if (element["scale"] == 50) {
+                    ImgUrl = "detail_int/" + icon_theme + "_int55.png";
+                    PointShindo = "震度5強";
+                } else if (element["scale"] == 55) {
+                    ImgUrl = "detail_int/" + icon_theme + "_int60.png";
+                    PointShindo = "震度6弱";
+                } else if (element["scale"] == 60) {
+                    ImgUrl = "detail_int/" + icon_theme + "_int65.png";
+                    PointShindo = "震度6強";
+                } else if (element["scale"] == 70) {
+                    ImgUrl = "detail_int/" + icon_theme + "_int70.png";
+                    PointShindo = "震度7";
+                } else {
+                    ImgUrl = "detail_int/" + icon_theme + "_int100.png";
+                    PointShindo = "震度不明";
+                }
+                if (element["isArea"] == true) { //観測点
+                    let shindo_latlng = new L.LatLng(getNthValue(centerPoint, result, "lat"), getNthValue(centerPoint, result, "lng"));
+                    
+                    
+                    let shindoIcon = L.icon({
+                        iconUrl: ImgUrl,
+                        iconSize: [20, 20],
+                        popupAnchor: [0, -40]
+                    });
+                    let shindoIcon_big = L.icon({
+                        iconUrl: ImgUrl,
+                        iconSize: [34, 34],
+                        popupAnchor: [0, -40]
+                    });
+                    shindo_icon = L.marker(shindo_latlng, { icon: shindoIcon, pane: eval('\"shindo' + element["scale"] + '\"') });
+                    shindo_icon.bindPopup('<ruby>' + element["addr"] + '<rt style="font-size: 0.7em;">' + getNthValue(AreaKana, result, "key") + '</rt></ruby>　' + PointShindo, { closeButton: false, zIndexOffset: 10000, autoPan: false, });
+                    shindo_icon.on('mouseover', function (e) {
+                        this.openPopup();
+                    });
+                    shindo_icon.on('mouseout', function (e) {
+                        this.closePopup();
+                    });
+                    shindo_layer.addLayer(shindo_icon);
+
+                    function getNthValue(centerPoint, n, key) {
+                        const values = Object.values(centerPoint);
+                        if (n < 0 || n > values.length || (key !== "lat" && key !== "lng")) {
+                            return values[n];
+                        }
+                        return values[n][key];
+                    }
+                }
+            } 
+        });
+
     }
 
     if (QuakeJson[num]["issue"]["type"] == "ScalePrompt") {
@@ -218,7 +294,11 @@ function QuakeSelect(num) {
 
 
     map.addLayer(shindo_layer);
-    map.flyTo(shingenLatLng, magnification, { duration: 0.5 })
+    if (QuakeJson[num]["issue"]["type"] == "ScalePrompt") {
+        map.flyTo(new L.LatLng(35,138), 5, { duration: 0.5 })
+    } else {
+        map.flyTo(shingenLatLng, magnification, { duration: 0.5 })
+    }
 
     document.getElementById('int').innerText = maxIntText;
     let element = document.getElementById("max_int");
@@ -230,7 +310,7 @@ function QuakeSelect(num) {
         element.style.backgroundColor = "#60d937";
         element.style.color = "black";
     } else if (maxIntText === "3") {
-        element.style.backgroundColor = "#fff200";
+        element.style.backgroundColor = "#fdfb42";
         element.style.color = "black";
     } else if (maxIntText === "4") {
         element.style.backgroundColor = "#fe9400";
@@ -275,7 +355,7 @@ function QuakeSelect(num) {
     intElement.innerHTML = modifiedText;
 
     let TsunamiElement = document.getElementById("tsunamiwarning");
-    if (QuakeJson[num]['earthquake']['domesticTsunami'] === "warning") {
+    if (QuakeJson[num]['earthquake']['domesticTsunami'] === "Warning") {
         TsunamiElement.style.display = "block";
     } else {
         TsunamiElement.style.display = "none";
@@ -313,7 +393,7 @@ function hantei_tsunamiText(param) {
             param == "Checking" ? "津波調査中" :
                 param == "NonEffective" ? "津波被害の心配なし" :
                     param == "Watch" ? "津波注意報" :
-                        param == "Warning" ? "津波予報あり" : "情報なし";
+                        param == "Warning" ? "" : "情報なし";
     return kaerichi;
 }
 
