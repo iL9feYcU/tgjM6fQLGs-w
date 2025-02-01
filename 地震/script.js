@@ -209,42 +209,38 @@ function QuakeSelect(num) {
     } else {//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
         QuakeJson[num]["points"].forEach(element => {
             var result = AreaName.indexOf(element["addr"]);
-            if (result != -1) {
-                var ImgUrl = "";
-                var PointShindo = "";
-                var icon_theme = "";
-                if (element["scale"] == 10) {
-                    ImgUrl = "detail_int/" + icon_theme + "_int1.png";
+            if (element["scale"] == 10) {
+                    ImgUrl = "int/" + icon_theme + "int1.png";
                     PointShindo = "震度1";
                 } else if (element["scale"] == 20) {
-                    ImgUrl = "detail_int/" + icon_theme + "_int2.png";
+                    ImgUrl = "int/" + icon_theme + "int2.png";
                     PointShindo = "震度2";
                 } else if (element["scale"] == 30) {
                     ImgUrl = "int/" + icon_theme + "int3.png";
                     PointShindo = "震度3";
                 } else if (element["scale"] == 40) {
-                    ImgUrl = "detail_int/" + icon_theme + "_int4.png";
+                    ImgUrl = "int/" + icon_theme + "int4.png";
                     PointShindo = "震度4";
                 } else if (element["scale"] == 45) {
-                    ImgUrl = "detail_int/" + icon_theme + "_int50.png";
+                    ImgUrl = "int/" + icon_theme + "int50.png";
                     PointShindo = "震度5弱";
                 } else if (element["scale"] == 46) {
-                    ImgUrl = "detail_int/" + icon_theme + "_int54.png";
+                    ImgUrl = "int/" + icon_theme + "int54.png";
                     PointShindo = "震度5弱以上と推定";
                 } else if (element["scale"] == 50) {
-                    ImgUrl = "detail_int/" + icon_theme + "_int55.png";
+                    ImgUrl = "int/" + icon_theme + "int55.png";
                     PointShindo = "震度5強";
                 } else if (element["scale"] == 55) {
-                    ImgUrl = "detail_int/" + icon_theme + "_int60.png";
+                    ImgUrl = "int/" + icon_theme + "int60.png";
                     PointShindo = "震度6弱";
                 } else if (element["scale"] == 60) {
-                    ImgUrl = "detail_int/" + icon_theme + "_int65.png";
+                    ImgUrl = "int/" + icon_theme + "int65.png";
                     PointShindo = "震度6強";
                 } else if (element["scale"] == 70) {
-                    ImgUrl = "detail_int/" + icon_theme + "_int70.png";
+                    ImgUrl = "int/" + icon_theme + "int70.png";
                     PointShindo = "震度7";
                 } else {
-                    ImgUrl = "detail_int/" + icon_theme + "_int100.png";
+                    ImgUrl = "int/" + icon_theme + "int100.png";
                     PointShindo = "震度不明";
                 }
                 if (element["isArea"] == true) { //観測点
