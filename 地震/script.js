@@ -81,7 +81,7 @@ function GetQuake(option) {
         data.forEach(element => {
             var option = document.createElement("option");
             var text;
-            let maxInt_data = element['earthquake']['maxScale'];
+            var maxInt_data = element['earthquake']['maxScale'];
             let maxIntText = hantei_maxIntText(maxInt_data);
             var magnitude = element['earthquake']['hypocenter']['magnitude']
             let Name = hantei_Name(element['earthquake']['hypocenter']['name']);
@@ -209,7 +209,11 @@ function QuakeSelect(num) {
     } else {//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
         QuakeJson[num]["points"].forEach(element => {
             var result = AreaName.indexOf(element["addr"]);
-            if (element["scale"] == 10) {
+            if (result != -1) {
+                var ImgUrl = "";
+                var PointShindo = "";
+                var icon_theme = "";
+                if (element["scale"] == 10) {
                     ImgUrl = "int/" + icon_theme + "int1.png";
                     PointShindo = "震度1";
                 } else if (element["scale"] == 20) {
