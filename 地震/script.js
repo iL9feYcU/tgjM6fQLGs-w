@@ -68,7 +68,7 @@ function GetQuake(option) {
     if (!isNaN(option)) {
         url = "https://api.p2pquake.net/v2/history?codes=551&limit=" + option;
     } else {
-        url = "https://api.p2pquake.net/v2/history?codes=551&limit=50&offset=15";
+        url = "https://api.p2pquake.net/v2/history?codes=551&limit=50";
     }
     $.getJSON(url, function (data) {
         QuakeJson = data;
