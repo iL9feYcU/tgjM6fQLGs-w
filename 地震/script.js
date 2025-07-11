@@ -68,7 +68,7 @@ function GetQuake(option) {
     if (!isNaN(option)) {
         url = "https://api.p2pquake.net/v2/history?codes=551&limit=" + option;
     } else {
-        url = "https://api.p2pquake.net/v2/history?codes=551&limit=50";
+        url = "https://api.p2pquake.net/v2/history?codes=551&limit=100";
     }
     $.getJSON(url, function (data) {
         QuakeJson = data;
@@ -120,8 +120,22 @@ function QuakeSelect(num) {
         shindo_layer = L.layerGroup();
         shindo_icon = "";
     }
-    let maxInt_data = QuakeJson[num]['earthquake']['maxScale'];
-    var maxIntText = hantei_maxIntText(maxInt_data);
+
+    // Destinationの場合は分布や最大震度はnum+1(ScalePrompt)を参照
+    let distNum = num;
+    if (
+        QuakeJson[num]["issue"]["type"] === "Destination" &&
+        QuakeJson[num + 1] &&
+        QuakeJson[num + 1]["issue"]["type"] === "ScalePrompt"
+    ) {
+        distNum = num + 1;
+    }
+
+    // 最大震度などは分布側(distNum)から取得
+    let maxInt_data = QuakeJson[distNum]['earthquake']['maxScale'];
+    let maxIntText = hantei_maxIntText(maxInt_data);
+
+    // 震源地情報はDestination側(num)から取得
     var Magnitude = hantei_Magnitude(QuakeJson[num]['earthquake']['hypocenter']['magnitude']);
     var Name = hantei_Name(QuakeJson[num]['earthquake']['hypocenter']['name']);
     var Depth = hantei_Depth(QuakeJson[num]['earthquake']['hypocenter']['depth']);
@@ -136,13 +150,21 @@ function QuakeSelect(num) {
         popupAnchor: [0, -40]
     });
     shingenIcon = L.marker(shingenLatLng, { icon: shingenIconImage }).addTo(map);
-    shingenIcon.bindPopup('発生時刻：' + Time + '<br>最大震度：' + maxIntText + '<br>震源地：' + Name + '<span style=\"font-size: 85%;\"> (' + QuakeJson[num]["earthquake"]["hypocenter"]["latitude"] + ", " + QuakeJson[num]["earthquake"]["hypocenter"]["longitude"] + ')</span><br>規模：M' + Magnitude + '　深さ：' + Depth + '<br>受信：' + QuakeJson[num]['issue']['time'] + ', ' + QuakeJson[num]['issue']['source'], { closeButton: false, zIndexOffset: 10000, maxWidth: 10000 });
+    shingenIcon.bindPopup(
+        '発生時刻：' + Time +
+        '<br>最大震度：' + maxIntText +
+        '<br>震源地：' + Name +
+        '<span style="font-size: 85%;"> (' + QuakeJson[num]["earthquake"]["hypocenter"]["latitude"] + ", " + QuakeJson[num]["earthquake"]["hypocenter"]["longitude"] + ')</span>' +
+        '<br>規模：M' + Magnitude + '　深さ：' + Depth +
+        '<br>受信：' + QuakeJson[num]['issue']['time'] + ', ' + QuakeJson[num]['issue']['source'],
+        { closeButton: false, zIndexOffset: 10000, maxWidth: 10000 }
+    );
     shingenIcon.on('mouseover', function (e) { this.openPopup(); });
     shingenIcon.on('mouseout', function (e) { this.closePopup(); });
 
-    if (QuakeJson[num]["issue"]["type"] != "ScalePrompt") { //各地の震度に関する情報
-        //観測点の震度についてすべての観測点に対して繰り返す
-        QuakeJson[num]["points"].forEach(element => {
+    // 各地の震度に関する情報
+    if (QuakeJson[distNum]["issue"]["type"] != "ScalePrompt") {
+        QuakeJson[distNum]["points"].forEach(element => {
             var result = JMAPoints.indexOf(element["addr"]);
             if (result != -1) {
                 var ImgUrl = "";
@@ -189,25 +211,16 @@ function QuakeSelect(num) {
                         iconSize: [20, 20],
                         popupAnchor: [0, -40]
                     });
-                    let shindoIcon_big = L.icon({
-                        iconUrl: ImgUrl,
-                        iconSize: [34, 34],
-                        popupAnchor: [0, -40]
-                    });
                     shindo_icon = L.marker(shindo_latlng, { icon: shindoIcon, pane: eval('\"shindo' + element["scale"] + '\"') });
                     shindo_icon.bindPopup('<ruby>' + element["addr"] + '<rt style="font-size: 0.7em;">' + JMAPointsJson[result]["furigana"] + '</rt></ruby>　' + PointShindo, { closeButton: false, zIndexOffset: 10000, autoPan: false, });
-                    shindo_icon.on('mouseover', function (e) {
-                        this.openPopup();
-                    });
-                    shindo_icon.on('mouseout', function (e) {
-                        this.closePopup();
-                    });
+                    shindo_icon.on('mouseover', function (e) { this.openPopup(); });
+                    shindo_icon.on('mouseout', function (e) { this.closePopup(); });
                     shindo_layer.addLayer(shindo_icon);
                 }
-            } 
+            }
         });
-    } else {//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-        QuakeJson[num]["points"].forEach(element => {
+    } else {
+        QuakeJson[distNum]["points"].forEach(element => {
             var result = AreaName.indexOf(element["addr"]);
             if (result != -1) {
                 var ImgUrl = "";
@@ -247,28 +260,17 @@ function QuakeSelect(num) {
                     ImgUrl = "int/" + icon_theme + "int100.png";
                     PointShindo = "震度不明";
                 }
-                if (element["isArea"] == true) { //観測点
+                if (element["isArea"] == true) { //エリア
                     let shindo_latlng = new L.LatLng(getNthValue(centerPoint, result, "lat"), getNthValue(centerPoint, result, "lng"));
-                    
-                    
                     let shindoIcon = L.icon({
                         iconUrl: ImgUrl,
                         iconSize: [20, 20],
                         popupAnchor: [0, -40]
                     });
-                    let shindoIcon_big = L.icon({
-                        iconUrl: ImgUrl,
-                        iconSize: [34, 34],
-                        popupAnchor: [0, -40]
-                    });
                     shindo_icon = L.marker(shindo_latlng, { icon: shindoIcon, pane: eval('\"shindo' + element["scale"] + '\"') });
                     shindo_icon.bindPopup('<ruby>' + element["addr"] + '<rt style="font-size: 0.7em;">' + getNthValue(AreaKana, result, "key") + '</rt></ruby>　' + PointShindo, { closeButton: false, zIndexOffset: 10000, autoPan: false, });
-                    shindo_icon.on('mouseover', function (e) {
-                        this.openPopup();
-                    });
-                    shindo_icon.on('mouseout', function (e) {
-                        this.closePopup();
-                    });
+                    shindo_icon.on('mouseover', function (e) { this.openPopup(); });
+                    shindo_icon.on('mouseout', function (e) { this.closePopup(); });
                     shindo_layer.addLayer(shindo_icon);
 
                     function getNthValue(centerPoint, n, key) {
@@ -279,27 +281,77 @@ function QuakeSelect(num) {
                         return values[n][key];
                     }
                 }
-            } 
+            }
         });
-
     }
 
-    if (QuakeJson[num]["issue"]["type"] == "ScalePrompt") {
+    // 地図の中心・縮尺調整
+    if (QuakeJson[distNum]["issue"]["type"] == "ScalePrompt") {
         magnification = 8.5;
-    } else if (QuakeJson[num]["issue"]["type"] == "Foreign") {
+    } else if (QuakeJson[distNum]["issue"]["type"] == "Foreign") {
         magnification = 5;
     } else {
         magnification = 8.5;
     }
 
-
-    map.addLayer(shindo_layer);
-    if (QuakeJson[num]["issue"]["type"] == "ScalePrompt") {
-        map.flyTo(new L.LatLng(35,138), 5, { duration: 0.5 })
+    // 震源と観測点の座標を集める
+    let latlngs = [];
+    // 震源
+    latlngs.push([
+        Number(QuakeJson[num]["earthquake"]["hypocenter"]["latitude"]),
+        Number(QuakeJson[num]["earthquake"]["hypocenter"]["longitude"])
+    ]);
+    // 観測点
+    if (QuakeJson[distNum]["issue"]["type"] != "ScalePrompt") {
+        QuakeJson[distNum]["points"].forEach(element => {
+            var result = JMAPoints.indexOf(element["addr"]);
+            if (result != -1 && JMAPointsJson[result]) {
+                latlngs.push([
+                    Number(JMAPointsJson[result]["lat"]),
+                    Number(JMAPointsJson[result]["lon"])
+                ]);
+            }
+        });
     } else {
-        map.flyTo(shingenLatLng, magnification, { duration: 0.5 })
+        QuakeJson[distNum]["points"].forEach(element => {
+            var result = AreaName.indexOf(element["addr"]);
+            if (result != -1 && typeof getNthValue === "function") {
+                let lat = Number(getNthValue(centerPoint, result, "lat"));
+                let lng = Number(getNthValue(centerPoint, result, "lng"));
+                if (!isNaN(lat) && !isNaN(lng)) {
+                    latlngs.push([lat, lng]);
+                }
+            }
+        });
     }
 
+    // 重心を計算
+    let avgLat = latlngs.reduce((sum, cur) => sum + cur[0], 0) / latlngs.length;
+    let avgLng = latlngs.reduce((sum, cur) => sum + cur[1], 0) / latlngs.length;
+
+    map.addLayer(shindo_layer);
+    // map.flyToの中心を重心に変更
+    if (QuakeJson[distNum]["issue"]["type"] == "ScalePrompt") {
+        map.flyTo(new L.LatLng(35, 137), 5, { duration: 0.5 });
+    } else {
+        map.flyTo(new L.LatLng(avgLat, avgLng), magnification, { duration: 0.5 });
+    }
+    // バウンディングボックスを計算
+    let lats = latlngs.map(ll => ll[0]);
+    let lngs = latlngs.map(ll => ll[1]);
+    let southWest = L.latLng(Math.min(...lats), Math.min(...lngs));
+    let northEast = L.latLng(Math.max(...lats), Math.max(...lngs));
+    let bounds = L.latLngBounds(southWest, northEast);
+
+    // 広がりが小さい場合は最大ズームを制限
+    let minZoom = 4; // 最小ズーム（広域）
+    let maxZoom = 9; // 最大ズーム（詳細）
+    // 縮尺自動調整はDetailScaleのときだけ
+    if (QuakeJson[distNum]["issue"]["type"] === "DetailScale") {
+        map.fitBounds(bounds, { maxZoom: maxZoom, padding: [50, 50] });
+    }
+
+    // UI更新
     document.getElementById('int').innerText = maxIntText;
     let element = document.getElementById("max_int");
     // maxIntTextの値に応じて背景色を変更
@@ -310,7 +362,7 @@ function QuakeSelect(num) {
         element.style.backgroundColor = "#60d937";
         element.style.color = "black";
     } else if (maxIntText === "3") {
-        element.style.backgroundColor = "#fdfb42";
+        element.style.backgroundColor = "#ffea00";
         element.style.color = "black";
     } else if (maxIntText === "4") {
         element.style.backgroundColor = "#fe9400";
@@ -342,7 +394,7 @@ function QuakeSelect(num) {
         int_element.style.fontSize = "6vw";
     }
 
-    let maxIntElement =document.getElementById("max_int");
+    let maxIntElement = document.getElementById("max_int");
     if (maxIntText === "7") {
         maxIntElement.style.border = "8px solid #fdfb42";
     } else {
