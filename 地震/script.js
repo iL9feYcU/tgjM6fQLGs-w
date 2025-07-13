@@ -261,10 +261,15 @@ function QuakeSelect(num) {
                     PointShindo = "震度不明";
                 }
                 if (element["isArea"] == true) { //エリア
+                    // 画像サイズを条件で変更
+                    let iconSize = [20, 20];
+                    if (QuakeJson[num]["issue"]["type"] === "Destination") {
+                        iconSize = [30, 30];
+                    }
                     let shindo_latlng = new L.LatLng(getNthValue(centerPoint, result, "lat"), getNthValue(centerPoint, result, "lng"));
                     let shindoIcon = L.icon({
                         iconUrl: ImgUrl,
-                        iconSize: [20, 20],
+                        iconSize: iconSize,
                         popupAnchor: [0, -40]
                     });
                     shindo_icon = L.marker(shindo_latlng, { icon: shindoIcon, pane: eval('\"shindo' + element["scale"] + '\"') });
@@ -330,12 +335,7 @@ function QuakeSelect(num) {
     let avgLng = latlngs.reduce((sum, cur) => sum + cur[1], 0) / latlngs.length;
 
     map.addLayer(shindo_layer);
-    // map.flyToの中心を重心に変更
-    if (QuakeJson[distNum]["issue"]["type"] == "ScalePrompt") {
-        map.flyTo(new L.LatLng(35, 137), 5, { duration: 0.5 });
-    } else {
-        map.flyTo(new L.LatLng(avgLat, avgLng), magnification, { duration: 0.5 });
-    }
+
     // バウンディングボックスを計算
     let lats = latlngs.map(ll => ll[0]);
     let lngs = latlngs.map(ll => ll[1]);
@@ -343,12 +343,17 @@ function QuakeSelect(num) {
     let northEast = L.latLng(Math.max(...lats), Math.max(...lngs));
     let bounds = L.latLngBounds(southWest, northEast);
 
-    // 広がりが小さい場合は最大ズームを制限
-    let minZoom = 4; // 最小ズーム（広域）
-    let maxZoom = 9; // 最大ズーム（詳細）
-    // 縮尺自動調整はDetailScaleのときだけ
+    // DetailScaleまたはDestinationのときはfitBoundsで自動調整
     if (QuakeJson[distNum]["issue"]["type"] === "DetailScale") {
+        let maxZoom = 9;
         map.fitBounds(bounds, { maxZoom: maxZoom, padding: [50, 50] });
+    } else if (QuakeJson[num]["issue"]["type"] === "Destination") {
+        let maxZoom = 7.5;
+        map.fitBounds(bounds, { maxZoom: maxZoom, padding: [50, 50] })
+    } else if (QuakeJson[distNum]["issue"]["type"] == "ScalePrompt") {
+        map.flyTo(new L.LatLng(35, 137), 5, { duration: 0.5 });
+    } else {
+        map.flyTo(new L.LatLng(avgLat, avgLng), magnification, { duration: 0.5 });
     }
 
     // UI更新
