@@ -14,7 +14,7 @@ html, body, #map {
     top: 5vh;
     left: 5vh;
     z-index: 10000;
-    width: 16vw;
+    width: 16.5vw;
     box-shadow: 0.3vw 0.3vw 0.6vw black;
 }
 #max_int {
