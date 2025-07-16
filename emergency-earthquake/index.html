@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <title>震度分布図（緊急地震速報）</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="JMAPoints.js"></script>
+</head>
+
+<body>
+    <div id="map"></div>
+    <div id="informations">
+        <div id="max_int">
+            <p id="saidai">予測最大震度</p>
+            <p id="int"></p>
+        </div>
+        <div id="detail_informatins">
+            <p id="time">N/A</p>
+            <p id="place">N/A</p>
+            <p>規模：<span id="magnitude">N/A</span></p>
+            <p>深さ：<span id="depth">N/A</span></p>
+            <p span id="tsunami"></p>
+        </div>
+    </div>
+    <div id="tsunamiwarning">津波予報あり</div>
+    <div class="btns">
+        <select id="quakelist">
+            <option>地震情報の取得中…</option>
+        </select>
+        <span class="setsumei" style="padding: 0;padding-right: 5px;"><button id="reload">情報更新</button> <input
+                type="number" id="reload_num" value="100" max="100">件</span>
+    </div>
+    <script src="JMAPoints.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
