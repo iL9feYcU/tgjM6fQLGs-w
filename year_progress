@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>Year Progress</title>
+</head>
+<body>
+
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+const S=document.createElement('style');
+S.textContent=`
+:root{--a:#0067C0;--b:#005a9e;--e:#202020;--f:#5d5d5d;--g:#e0e0e0;--h:12px;--i:4px;--j:0 8px 32px rgba(0,0,0,.08)}
+body{background:linear-gradient(135deg,#eef2f3 0%,#dcecfb 100%);display:flex;justify-content:center;align-items:center;height:100vh;height:100dvh;margin:0;font-family:"Segoe UI Variable Display","Segoe UI",sans-serif;color:var(--e);user-select:none;overflow:hidden}
+.x{background:rgba(255,255,255,.85);backdrop-filter:blur(20px);width:90%;max-width:420px;padding:24px;border-radius:var(--h);box-shadow:var(--j);border:1px solid rgba(255,255,255,.5);display:flex;flex-direction:column;gap:16px;box-sizing:border-box}
+.y{display:flex;align-items:center;gap:12px}
+.z{width:40px;height:40px;background:#e0f0ff;color:var(--a);border-radius:8px;display:flex;justify-content:center;align-items:center;font-size:20px}
+.q{display:flex;flex-direction:column}
+h2{margin:0;font-size:16px;font-weight:600}
+.r{font-size:12px;color:var(--f)}
+.s{display:flex;flex-direction:column;gap:8px}
+.t{display:flex;justify-content:space-between;font-size:12px;font-weight:600}
+.u{height:6px;background:var(--g);border-radius:10px;overflow:hidden}
+.v{height:100%;background:var(--a);width:0%;transition:width .5s cubic-bezier(.33,1,.68,1)}
+.w{font-size:12px;color:var(--f);text-align:right}
+.m{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+.n{background:#fff;border:1px solid #d1d1d1;padding:6px 24px;border-radius:var(--i);font-size:14px;cursor:pointer}
+.n:hover{background:#f6f6f6}
+.n:active{background:#ededed;transform:scale(.98)}
+.o{background:var(--a);color:#fff;border:none}
+.o:hover{background:var(--b)}
+@media(max-width:480px){.x{padding:20px}}
+`;
+document.head.appendChild(S);
+const E=(t,c)=>{const e=document.createElement(t);c&&e.classList.add(c);return e};
+
+const card=E('div','x');
+
+const head=E('div','y');
+const icon=E('div','z'); icon.textContent='📅';
+const tg=E('div','q');
+const h2=document.createElement('h2'); h2.id='a1';
+const sub=E('span','r'); sub.textContent='システム更新の進行状況';
+tg.append(h2,sub); head.append(icon,tg);
+
+const prog=E('div','s');
+const labels=E('div','t');
+const sp1=document.createElement('span'); sp1.textContent='進行中';
+const sp2=document.createElement('span'); sp2.id='a2';
+labels.append(sp1,sp2);
+
+const track=E('div','u');
+const fill=E('div','v'); fill.id='a3'; track.append(fill);
+
+const detail=E('div','w');
+detail.innerHTML='残り日数: <span id="a4">--</span> 日';
+
+prog.append(labels,track,detail);
+
+const act=E('div','m');
+const b1=E('button','n'); b1.textContent='一時停止';
+b1.onclick=()=>alert('不明なエラーが発生しました');
+const b2=E('button','n'); b2.classList.add('o');
+b2.textContent='更新'; b2.onclick=()=>location.reload();
+
+act.append(b1,b2);
+card.append(head,prog,act);
+document.body.appendChild(card);
+const loop=()=>{
+  const d=new Date(),y=d.getFullYear(),
+        s=new Date(y,0,1),e=new Date(y+1,0,1),
+        p=(d-s)/(e-s)*100,
+        r=Math.ceil((e-d)/864e5);
+  a1.textContent=y+'年';
+  a3.style.width=p+'%';
+  a2.textContent=p.toFixed(1)+'%';
+  a4.textContent=r;
+  requestAnimationFrame(loop);
+};
+loop();
+
+});
+</script>
+</body>
+</html>
